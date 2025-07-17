@@ -1,10 +1,23 @@
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import Header from "@/components/header";
+import Storage from "@/utils/storage";
 
 export default function NewNote() {
-    const [noteTitle, setNoteTitle] = useState("");
-    const [noteText, setNoteText] = useState("");
+    const [noteTitle, setNoteTitle] = useState<string>("");
+    const [noteText, setNoteText] = useState<string>("");
+
+    async function saveNote(title: string,text: string){
+        const notes = await Storage.getItem("notes");
+        const notesArray = notes ? JSON.parse(notes) : [];
+        const newNote = {
+            title: title,
+            text: text,
+            lastEdited: new Date().toLocaleDateString("pt-BR")
+        };
+        notesArray.push(newNote);
+        await Storage.setItem("notes", JSON.stringify(notesArray));
+    }
 
     return (
         <View className="flex-1 items-center bg-gray-100">
@@ -15,18 +28,27 @@ export default function NewNote() {
                 value={noteTitle}
                 onChangeText={(text) => {setNoteTitle(text)}}
                 placeholder="Título"
-                className="border border-gray-300 rounded p-2 w-full my-4 h-16"
+                className="border border-gray-300 rounded p-2 w-full h-16"
             />
-            <Button title="gerar com IA" onPress={()=>{}}></Button>
-            <Button title="corrigir ortografia" onPress={()=>{}}></Button>
+            <View className="flex-row gap-2 my-4">
+            <TouchableOpacity onPress={() => {}} className="rounded bg-blue-500 p-2">
+                <Text className="text-white">Gerar com IA</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {}} className="rounded bg-green-500 p-2">
+                <Text className="text-white">Corrigir Ortografia</Text>
+            </TouchableOpacity>
+            </View>
             <TextInput
                 value={noteText}
                 onChangeText={(text) => {setNoteText(text)}}
                 placeholder="Escreva sua nota aqui..."
-                className="border border-gray-300 rounded p-2 w-full h-full"
+                className="border border-gray-300 rounded p-2 w-full h-96"
                 multiline
                 textAlignVertical="top"
             />
+            <TouchableOpacity onPress={() => saveNote(noteTitle, noteText)} className="rounded bg-blue-600 p-2 mt-4">
+                <Text className="text-white text-center">Salvar Nota</Text>
+            </TouchableOpacity>
             </View>
         </View>
     );

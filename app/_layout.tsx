@@ -1,29 +1,51 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Tabs } from "expo-router";
+import "../global.css";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+  return <Tabs screenOptions={{ 
+    headerShown: false,
+    tabBarActiveTintColor: "#444477",
+    tabBarInactiveTintColor: "#aaaaaa",
+    tabBarStyle: {
+      backgroundColor: "#fff5",
+      borderTopWidth: 0,
+      elevation: 0,
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      height: 110,}
+  }}>
+    <Tabs.Screen
+      name="index"
+      options={{
+        tabBarLabel: "Notas",
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="home" size={size} color={color} />
+        ),
+      }}
+    />
+    <Tabs.Screen
+      name="newNote"
+      options={{
+        tabBarLabel: "",
+        tabBarIconStyle: {
+          transform: "scale(2.8)",
+        },
+        
+        tabBarIcon: ({ focused, size }) => (
+          <Ionicons name="add-circle" size={size} color={focused ? "#44f" : "#88e"} />
+        ),
+      }}
+      />
+    <Tabs.Screen
+      name="settings"
+      options={{
+        tabBarLabel: "Config",
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="settings" size={size} color={color} />
+        ),
+      }}
+    />
+  </Tabs>;
 }

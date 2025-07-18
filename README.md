@@ -7,9 +7,9 @@
 
 1. Baixe os arquivos
 
-```bash
+   ```bash
    git clone https://github.com/Evy8882/Nottle.git
-```
+   ```
 
 2. Instale as dependências
 

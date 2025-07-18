@@ -1,6 +1,8 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Storage from "@/utils/storage";
+import Note from "@/utils/note";
+import { useRouter } from "expo-router";
 
 type NotePreviewProps = {
     title: string;
@@ -21,9 +23,14 @@ function NotePreview({
     async function handleDelete(noteKey: string) {
         const notes = await Storage.getItem("notes");
         const notesArray = notes ? JSON.parse(notes) : [];
-        const updatedNotes = notesArray.filter((note: any) => note.key !== noteKey);
+        const updatedNotes = notesArray.filter((note: Note) => note.key !== noteKey);
         await Storage.setItem("notes", JSON.stringify(updatedNotes));
         update();
+    }
+
+    function handleEdit(noteKey: string) {
+        const router = useRouter();
+        router.push({ pathname: "/note/[key]", params: { key: noteKey } });
     }
 
     return (
@@ -38,7 +45,7 @@ function NotePreview({
                 Última edição: {lastEdited}
             </Text>
             <View className="flex-row justify-between items-center mt-2">
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleEdit(noteKey)}>
                     <Ionicons name="create" size={32} color="#447" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleDelete(noteKey)}>

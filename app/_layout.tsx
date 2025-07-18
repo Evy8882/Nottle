@@ -47,5 +47,15 @@ export default function RootLayout() {
         ),
       }}
     />
+  <Tabs.Screen
+    name="note/[key]"
+    options={{
+      tabBarButton: () => null,
+      tabBarStyle: { display: "none" },
+      headerShown: false,
+      tabBarIcon: () => null,
+      tabBarItemStyle: { display: "none" }
+    }}
+  />
   </Tabs>;
 }
